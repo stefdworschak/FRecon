@@ -1,5 +1,4 @@
 from flask import Flask, request, Response,make_response
-#import jsonpickle
 import numpy as np
 import cv2
 import os
@@ -8,14 +7,20 @@ from PIL import Image
 from FRecon import FRecon
 
 
+#create instance of FRecon class, using FACENET DNN model and "../" as a relative path for required folders
 reconhecimento = FRecon("FACENET","../")
 
 
 # initialize API
 app = Flask( __name__ )
 
+
+#API ENDPOINT created to exposed Facial Recognition application to be consumed.
+#This example will expose it at http://localhost:5000
+
 @app.route( '/facialrecognition', methods=['POST'] )
 def Reconhecimento_Racial():
+    #chech is there is some file image coming from request. If so, apply prediction and return the output image
     if request.files['image'].filename == '':
         return Response( 'No selected image', status=200, mimetype='text/xml' )
     else:
