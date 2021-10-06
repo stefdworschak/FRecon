@@ -8,11 +8,12 @@ from FRecon import FRecon
 
 
 #create instance of FRecon class, using FACENET DNN model and "../" as a relative path for required folders
-reconhecimento = FRecon("FACENET","../")
+recon = FRecon("FACENET","../")
 
 
 # initialize API
 app = Flask( __name__ )
+
 
 
 #API ENDPOINT created to exposed Facial Recognition application to be consumed.
@@ -30,7 +31,7 @@ def Reconhecimento_Racial():
         
         img = cv2.cvtColor(np.array(image_bytes), cv2.COLOR_RGB2BGR)
 
-        img2 = reconhecimento.PredictFace(img,"LR")
+        img2 = recon.PredictFace(img,"LR")
 
         retval, buffer = cv2.imencode('.jpg', img2)
 
