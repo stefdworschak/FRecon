@@ -21,7 +21,7 @@ os.makedirs(UPLOADS_DIR, exist_ok=True)
 #API ENDPOINT created to exposed Facial Recognition application to be consumed.
 #This example will expose it at http://localhost:5000
 
-@app.route( '/facialrecognition',methods = ['POST', 'GET'])
+@app.route( '/facialrecognition',methods = ['POST'])
 def Reconhecimento_Racial():
     #chech is there is some file image coming from request. If so, apply prediction and return the output image
     if request.files['image'].filename == '':
