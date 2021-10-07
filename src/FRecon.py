@@ -5,7 +5,7 @@ import ntpath
 import math
 import pickle
 from scipy.special import softmax
-
+import zipfile
 
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
@@ -42,7 +42,9 @@ class FRecon :
         self.face_net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
         self.face_net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
 
+        self.LoadModelsAndLabels()
 
+    def LoadModelsAndLabels(self):
         #ML SVM model load
         model_name = self.relative_path+"modelSVM/SVC_model.pkl"
         if os.path.exists(model_name):
@@ -111,7 +113,7 @@ class FRecon :
 
         return img, detections
         
-    
+
     def ExtractFaceRectangle(self, img, detections, confidence_threshold=0.2):
         #loop over the detections
         #check for threshold confidence before extract boxes of face in image
@@ -210,7 +212,7 @@ class FRecon :
         indexes_ok=[]
         array_keypoints=[]
         for i,f in enumerate(files):
-            print("Colecting image : {} -  {}".format(i,f))
+            print("Collecting image : {} -  {}".format(i,f))
             img, detections = self.FindFaceinImage(path_image=f)
             if detections is not None:
                 indexes_ok.append(i)
@@ -250,6 +252,7 @@ class FRecon :
         with open(model_name, 'wb') as file:  
             pickle.dump(self.image_labels, file)
         
+        self.LoadModelsAndLabels()
         print("Training finished")
         
         
@@ -285,4 +288,11 @@ class FRecon :
                     img = self.DrawImageFaceRectangle(img,b[0],result,etiqueta)
             return img
 
-
+    def UploadTrainingFiles(self, filepath):
+        try:
+            with zipfile.ZipFile(filepath, 'r') as zipref:
+                zipref.extractall('../images')
+            self.TrainModelfull()
+            return True
+        except:
+            return False
